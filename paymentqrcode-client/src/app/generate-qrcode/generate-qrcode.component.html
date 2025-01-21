@@ -1,0 +1,17 @@
+<h1>Générer un QR Code</h1>
+<form (ngSubmit)="onSubmit()" #qrForm="ngForm">
+    <label for="amount">Montant :</label>
+    <input
+            type="number"
+            id="amount"
+            name="amount"
+            [(ngModel)]="amount"
+            required
+            min="0.01"
+    />
+    <button type="submit" [disabled]="qrForm.invalid">Générer</button>
+</form>
+<div *ngIf="qrCodeUrl">
+    <h2>Votre QR Code</h2>
+    <img [src]="qrCodeUrl" alt="QR Code" />
+</div>
