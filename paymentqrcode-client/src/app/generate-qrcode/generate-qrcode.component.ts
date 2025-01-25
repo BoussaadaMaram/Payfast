@@ -9,14 +9,15 @@ import { HttpClient } from '@angular/common/http';
 export class GenerateQrCodeComponent {
   amount: number = 0;
   qrCodeUrl: string | null = null;
+  baseURL: string = 'http://localhost:8081';
 
   constructor(private http: HttpClient) {}
 
   onSubmit() {
     this.http
-        .post<{ url: string }>('http://localhost:8081/api/qrcode/generate', { amount: this.amount })
-        .subscribe((response) => {
-          this.qrCodeUrl = response.url;
+        .post(this.baseURL + '/api/qrcode/generate', { amount: this.amount })
+        .subscribe((response: any) => {
+          this.qrCodeUrl = this.baseURL+response.qrCodeImageUrl;
         });
   }
 }

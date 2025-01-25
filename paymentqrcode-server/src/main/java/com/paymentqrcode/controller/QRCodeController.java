@@ -17,25 +17,28 @@ public class QRCodeController {
     @PostMapping("/generate")
     public ResponseEntity<Map<String, String>> generateQRCode(@RequestBody Map<String, Object> request) {
         try {
-            // Récupérer le montant depuis la requête
-            Double amount = (Double) request.get("amount");
+            // Retrieve the amount from the request
+            Integer amount = Integer.parseInt(request.get("amount").toString());
 
-            // Validation de la donnée
+            // Validate the amount
             if (amount == null || amount <= 0) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("error", "Le montant doit être supérieur à zéro."));
             }
 
-            // Générer l'URL du QR code
-            String qrCodeUrl = qrCodeService.generateQRCode(amount);
+            // Generate the payment URL
+            String paymentUrl = qrCodeService.generatePaymentLink(amount);
 
-            // Retourner l'URL au front-end
-            return ResponseEntity.ok(Map.of("url", qrCodeUrl));
+            // Save the QR code to a public directory
+            String imageUrl = qrCodeService.saveQRCodeToFile(paymentUrl, "src/main/resources/static/images");
+
+            // Return the image URL to the frontend
+            return ResponseEntity.ok(Map.of("paymentUrl", paymentUrl, "qrCodeImageUrl", imageUrl));
 
         } catch (Exception e) {
-            // Gérer toute erreur inattendue
+            // Handle unexpected errors
             return ResponseEntity.status(500)
-                    .body(Map.of("error", "Une erreur est survenue lors de la génération du QR code."));
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 }

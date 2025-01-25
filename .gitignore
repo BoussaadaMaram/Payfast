@@ -1,1 +1,3 @@
 paymentqrcode-client/node_modules
+paymentqrcode-server/target
+paymentqrcode-client/.angular/cache
